@@ -1,0 +1,295 @@
+
+用以下的api取得資料顯示在id="bookList"
+app.get('/api/insertedbooks', (req, res) => {
+    const userId = req.session.username;
+    if (!userId) {
+        return res.status(401).json({ message: 'User not logged in' });
+    }
+    const sql = 'SELECT book_id, book_name, book_college, book_department, user_id, book_pic FROM book WHERE user_id = ?';
+
+    db.all(sql, [userId], (err, rows) => {
+        if (err) {
+            console.error(err.message);
+            return res.status(500).send('Internal Server Error');
+        }
+        if (rows.length > 0) {
+            res.json(rows);
+        } else {
+            res.status(404).json({ message: 'No books found for this user' });
+        }
+    });
+
+    console.log(`Fetched books for user ${userId}`);
+});
+
+給我前端js所需要的code
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// document.addEventListener('DOMContentLoaded', async () => {
+//     const cartList = document.getElementById('cart-list'); // 獲取用於顯示購物車列表的 DOM 元素
+
+//     try {
+//         // 檢查用戶登錄狀態
+//         const loginResponse = await fetch('/checkLoginStatus'); // 向服務器發送請求，檢查用戶登錄狀態
+//         const loginData = await loginResponse.json(); // 將響應轉換為 JSON 格式
+        
+//         if (!loginData.loggedIn) { // 如果用戶未登錄
+//             cartList.innerHTML = '<p>用戶未登入</p>'; // 顯示用戶未登錄的提示信息
+//             return; // 終止後續代碼執行
+//         }
+
+//         const userId = loginData.username; // 從登錄狀態中獲取用戶名作為用戶ID
+//         console.log(`Logged in user ID: ${userId}`);
+
+//         // 獲取購物車數據
+//         const cartResponse = await fetch(`/api/cart`); // 向服務器發送請求，獲取購物車數據
+//         if (!cartResponse.ok) { // 如果響應狀態不是 OK
+//             throw new Error(`HTTP error! Status: ${cartResponse.status}`); // 拋出錯誤
+//         }
+
+//         const cartData = await cartResponse.json(); // 將響應轉換為 JSON 格式
+//         console.log('Cart data:', cartData);
+
+//         if (cartData.message === "success") { // 如果獲取購物車數據成功
+//             const cartItems = cartData.data; // 獲取購物車中的項目
+//             cartList.innerHTML = ''; // 清空現有內容
+
+//             cartItems.forEach(item => { // 遍歷購物車中的每個項目
+//                 const itemDiv = document.createElement('div'); // 創建一個 div 元素
+//                 itemDiv.className = 'cart-item'; // 設置 div 元素的 class 名稱
+//                 itemDiv.innerHTML = `
+//                     <img src="${item.book.book_pic ? `/${item.book.book_pic}` : 'uploads/34103fab-a0ba-493a-b66a-179d516aee63-1722308365104'}" alt="${item.book.book_name}">
+//                     <h3>${item.book.book_name}</h3>
+//                     <p>學院: ${item.book.book_college}</p>
+//                     <p>系所: ${item.book.book_department}</p>
+//                     <button class="accept-item" data-cart-id="${item.cart_id}">接受</button>
+//                     <button class="remove-item" data-cart-id="${item.cart_id}">拒絕</button>
+//                 `; // 設置 div 元素的內部 HTML 結構，包含書籍信息和操作按鈕
+//                 cartList.appendChild(itemDiv); // 將 div 元素添加到購物車列表中
+//             });
+//         } else {
+//             console.error('Failed to fetch cart items:', cartData.error); // 如果獲取購物車數據失敗，顯示錯誤信息
+//             cartList.innerHTML = '<p>未能獲取購物車內容</p>'; // 顯示未能獲取購物車內容的提示信息
+//         }
+//     } catch (error) {
+//         console.error('Error fetching cart items:', error); // 捕獲異常並顯示錯誤信息
+//         cartList.innerHTML = '<p>獲取購物車數據時發生錯誤</p>'; // 顯示獲取購物車數據時發生錯誤的提示信息
+//     }
+// });
+
+
+// function checkIfBookInCart(bookId, userId) {
+//     fetch('/api/checkInCart', {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/json'
+//         },
+//         body: JSON.stringify({ book_id: bookId, user_id: userId })
+//     })
+//     .then(response => response.json())
+//     .then(data => {
+//         if (data.success) {
+//             if (data.exists) {
+//                 alert('The book is already in your cart.');
+//             } else {
+//                 // 书籍不在购物车中，您可以调用添加到购物车的 API
+//                 alert('The book is not in your cart yet.');
+//             }
+//         } else {
+//             alert('Error checking cart status.');
+//         }
+//     })
+//     .catch(error => {
+//         console.error('Error:', error);
+//         alert('Error checking cart status.');
+//     });
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<select id="college" name="college" required>
+                <option value="商管學院">商管學院</option>
+                <option value="理學院">理學院</option>
+                <option value="工學院">工學院</option>
+                <option value="文學院">文學院</option>
+                <option value="外語學院">外語學院</option>
+                <option value="教育學院">教育學院</option>
+                <option value="AI創智學院">AI創智學院</option>
+                <option value="國際事務學院">國際事務學院</option>
+            </select><br><br>
+
+
+            const departmentOptions = {
+            '商管學院': ['國企系', '風保系', '經濟系', '企管系', '會計系', '統計系', '公行系', '管科系', '資管系', '運管系', '財金系', '產經系'],
+            '理學院': ['數學系', '物理系', '化學系', '尖端材料系'],
+            '工學院': ['建築系', '土木系', '水環系', '機械系', '化材系', '電機系', '資工系', '航太系'],
+            '文學院': ['中文系', '歷史系', '資圖系', '大傳系', '資傳系'],
+            '外語學院': ['英文系', '西語系', '法語系', '德語系', '日語系', '俄語系'],
+            '教育學院': ['教科系', '教育語未來設計系'],
+            'AI創智學院': ['人工智慧學系'],
+            '國際事務學院': ['外交與國際關係系', '國際觀光管理學系', '全球政治經濟學系']
+    };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+header {
+    background-color: #f8f8f8;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+}
+.logo img {
+    width: 50px; /* 設定圖片寬度 */
+    height: auto; /* 高度自動調整 */
+    margin-right: 10px; /* 可調整 logo 文字和圖片之間的距離 */
+}
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+nav ul li {
+    margin-left: 20px;
+}
+nav ul li a {
+    text-decoration: none;
+    color: #333;
+}
+.search-bar {
+    flex-grow: 1;
+    margin: 0 20px;
+}
+.search-bar input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+.login-button {
+    font-size: 14px;
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.login-button:hover {
+    background-color: #0056b3;
+}
+main {
+    padding: 20px;
+}
+.products {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 20px;
+}
+.product {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+.product img {
+    max-width: 100%;
+    height: auto;
+}
